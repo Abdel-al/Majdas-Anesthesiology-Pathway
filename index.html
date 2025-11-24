@@ -1,623 +1,527 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Majda's Anesthesiology Pathway</title>
-    <!-- Chosen Palette: Calm Harmony (Stone neutrals with a professional teal accent) -->
-    <!-- Application Structure Plan: A single-page dashboard with top navigation to jump between thematic sections (Timeline, Checklist, University Plans, etc.). This structure breaks down a complex report into manageable, interactive modules, prioritizing user exploration over linear reading. The core interaction is the university plan selector, which dynamically displays detailed plans without cluttering the UI. -->
-    <!-- Visualization & Content Choices: Report Info: Total time commitment -> Goal: Inform -> Viz: Chart.js Doughnut Chart -> Interaction: Static visual -> Justification: Quickly visualizes the 12-year timeline. Report Info: University Plans -> Goal: Compare -> Viz: Tab-like button system -> Interaction: Click to show/hide university-specific data blocks -> Justification: Allows direct comparison without overwhelming the user. Report Info: Master Checklist -> Goal: Track -> Viz: HTML list -> Interaction: Clickable checkboxes updating a progress bar -> Justification: Turns a static list into an engaging, functional tool. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #8C1D40; /* ASU Maroon */
+            --secondary: #FFC627; /* ASU Gold */
+            --accent: #0C234B; /* UofA Navy */
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+        }
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
         }
-        .nav-link {
-            transition: color 0.3s, border-bottom-color 0.3s;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: #0d9488; /* teal-600 */
-            border-bottom-color: #0d9488;
-        }
-        .university-btn.active {
-            background-color: #0d9488; /* teal-600 */
+        header {
+            background-color: var(--primary);
             color: white;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+            text-align: center;
         }
-        .checklist-item.completed label {
-            text-decoration: line-through;
-            color: #64748b; /* slate-500 */
+        nav {
+            background-color: var(--dark);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-        .chart-container {
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        nav a:hover {
+            color: var(--secondary);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .content-section {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 0.5rem;
+        }
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            margin: 2rem 0;
             position: relative;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #ddd;
+            z-index: 0;
+        }
+        .milestone {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 1;
+            color: var(--primary);
+        }
+        .phase-header {
+            background-color: #eee;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .phase-content {
+            display: block; /* Changed to default open */
+            padding: 15px;
+            border: 1px solid #eee;
+            border-top: none;
+        }
+        .checklist-item {
+            margin: 10px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        .checklist-item input {
+            margin-top: 5px;
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        .progress-bar-container {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 25px;
             width: 100%;
-            max-width: 350px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 350px;
-            max-height: 400px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            background-color: var(--success);
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            text-align: center;
+            line-height: 25px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease-in-out;
+        }
+        .school-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .school-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            transition: transform 0.2s;
+        }
+        .school-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ccc;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+        .tab-button.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+        }
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .resource-link {
+            display: block;
+            padding: 10px;
+            background: #f1f1f1;
+            margin: 5px 0;
+            text-decoration: none;
+            color: var(--dark);
+            border-radius: 4px;
+        }
+        .resource-link:hover {
+            background: #e2e2e2;
+        }
+        .badge {
+            background: var(--secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .timeline {
+                flex-direction: column;
+                align-items: center;
+            }
+            .timeline::before {
+                width: 4px;
+                height: 100%;
+                left: 50%;
+                top: 0;
+            }
+            .milestone {
+                margin: 20px 0;
+            }
         }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
 
-    <!-- Header & Navigation -->
-    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between py-4">
-                <div class="text-left">
-                    <h1 class="text-xl md:text-2xl font-bold text-teal-700">Majda's Anesthesiology Pathway</h1>
-                    <p class="text-sm text-slate-500">An Interactive Guide from High School to Practice</p>
-                </div>
-                <nav class="hidden md:flex items-center space-x-6">
-                    <a href="#overview" class="nav-link text-slate-600 font-medium pb-1 border-b-2 border-transparent">Overview</a>
-                    <a href="#checklist" class="nav-link text-slate-600 font-medium pb-1 border-b-2 border-transparent">Checklist</a>
-                    <a href="#university-plans" class="nav-link text-slate-600 font-medium pb-1 border-b-2 border-transparent">University Plans</a>
-                    <a href="#med-schools" class="nav-link text-slate-600 font-medium pb-1 border-b-2 border-transparent">Med Schools</a>
-                    <a href="#resources" class="nav-link text-slate-600 font-medium pb-1 border-b-2 border-transparent">Resources</a>
-                </nav>
-            </div>
-        </div>
+    <header>
+        <h1>Majda's Anesthesiology Pathway</h1>
+        <p>An Interactive Guide from High School to Practice</p>
     </header>
 
-    <main class="container mx-auto px-4 py-8 md:py-12">
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#checklist">Checklist</a></li>
+            <li><a href="#university-plans">University Plans</a></li>
+            <li><a href="#med-schools">Med Schools</a></li>
+            <li><a href="#resources">Resources</a></li>
+        </ul>
+    </nav>
 
-        <!-- Section 1: Overview -->
-        <section id="overview" class="mb-16">
-            <h2 class="text-3xl font-bold mb-2 text-center">The Journey Ahead</h2>
-            <p class="text-slate-600 text-center max-w-3xl mx-auto mb-12">The path to becoming an anesthesiologist is a marathon, not a sprint. It requires about 12 years of dedicated effort after high school. This section provides a high-level overview of the major phases and the time commitment involved for each step.</p>
+    <div class="container">
+
+        <div id="overview" class="content-section">
+            <h2>The Journey Ahead</h2>
+            <p>The path to becoming an anesthesiologist is a marathon, not a sprint. It requires about 12 years of dedicated effort after high school.</p>
             
-            <div class="grid md:grid-cols-2 gap-8 items-center">
-                <!-- Timeline Diagram -->
-                <div class="space-y-6">
-                    <div class="flex items-start">
-                        <div class="flex flex-col items-center mr-4">
-                            <div class="flex items-center justify-center w-10 h-10 bg-teal-500 text-white rounded-full font-bold">1</div>
-                            <div class="w-px h-16 bg-slate-300"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-lg">High School (Grades 11-12)</h3>
-                            <p class="text-slate-600">Build a stellar academic and extracurricular profile to gain admission to a top pre-medical program.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="flex flex-col items-center mr-4">
-                            <div class="flex items-center justify-center w-10 h-10 bg-teal-500 text-white rounded-full font-bold">2</div>
-                            <div class="w-px h-16 bg-slate-300"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-lg">Undergraduate University (4 Years)</h3>
-                            <p class="text-slate-600">Earn a Bachelor's degree, complete all pre-medical course requirements, and excel on the MCAT exam.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="flex flex-col items-center mr-4">
-                            <div class="flex items-center justify-center w-10 h-10 bg-teal-500 text-white rounded-full font-bold">3</div>
-                            <div class="w-px h-16 bg-slate-300"></div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-lg">Medical School (4 Years)</h3>
-                            <p class="text-slate-600">Earn a Doctor of Medicine (M.D.) or Doctor of Osteopathic Medicine (D.O.) degree.</p>
-                        </div>
-                    </div>
-                    <div class="flex items-start">
-                        <div class="flex flex-col items-center mr-4">
-                            <div class="flex items-center justify-center w-10 h-10 bg-teal-500 text-white rounded-full font-bold">4</div>
-                        </div>
-                        <div>
-                            <h3 class="font-semibold text-lg">Anesthesiology Residency (4 Years)</h3>
-                            <p class="text-slate-600">Complete a 1-year internship followed by 3 years of specialized anesthesiology training to become board-eligible.</p>
-                        </div>
-                    </div>
+            <div class="timeline">
+                <div style="text-align: center; flex: 1;">
+                    <div class="milestone" style="margin: 0 auto;">1</div>
+                    <h3>High School</h3>
+                    <p>Build a stellar academic profile & get AS Degree.</p>
                 </div>
-                <!-- Chart -->
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="text-xl font-semibold text-center mb-4">Post-High School Timeline (12 Years)</h3>
-                    <div class="chart-container">
-                        <canvas id="timelineChart"></canvas>
-                    </div>
+                <div style="text-align: center; flex: 1;">
+                    <div class="milestone" style="margin: 0 auto;">2</div>
+                    <h3>Undergraduate</h3>
+                    <p>Bachelor's degree & MCAT exam.</p>
+                </div>
+                <div style="text-align: center; flex: 1;">
+                    <div class="milestone" style="margin: 0 auto;">3</div>
+                    <h3>Med School</h3>
+                    <p>Earn M.D. or D.O. degree (4 Years).</p>
+                </div>
+                <div style="text-align: center; flex: 1;">
+                    <div class="milestone" style="margin: 0 auto;">4</div>
+                    <h3>Residency</h3>
+                    <p>Anesthesiology Training (4 Years).</p>
                 </div>
             </div>
-        </section>
-
-        <!-- Section 2: Checklist -->
-        <section id="checklist" class="mb-16">
-            <h2 class="text-3xl font-bold mb-2 text-center">Master Checklist</h2>
-            <p class="text-slate-600 text-center max-w-3xl mx-auto mb-8">Use this interactive checklist to track your progress through every critical milestone. Checking items off will update your overall progress, helping you stay organized and motivated.</p>
-            
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md">
-                <div class="mb-6">
-                    <div class="flex justify-between mb-1">
-                        <span class="text-base font-medium text-teal-700">Overall Progress</span>
-                        <span id="progress-text" class="text-sm font-medium text-teal-700">0%</span>
-                    </div>
-                    <div class="w-full bg-slate-200 rounded-full h-2.5">
-                        <div id="progress-bar" class="bg-teal-500 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                </div>
-
-                <div class="space-y-4">
-                    <!-- High School -->
-                    <div class="phase-header" onclick="togglePhase('phase1')">
-    <h3>Phase 1: High School & AS Degree (Now - May 2027)</h3>
-    <span class="toggle-icon">+</span>
-</div>
-<div id="phase1" class="phase-content">
-    <div class="checklist-item">
-        <input type="checkbox" id="c1" checked disabled>
-        <label for="c1"><strong>ARB 101:</strong> Elementary Arabic I (5 Credits) - <em>Completed</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c2" checked disabled>
-        <label for="c2"><strong>ARB 102:</strong> Elementary Arabic II (5 Credits) - <em>Completed</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c3" checked disabled>
-        <label for="c3"><strong>MAT 152:</strong> College Algebra (3 Credits) - <em>Completed</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c4" checked disabled>
-        <label for="c4"><strong>COM 110:</strong> Interpersonal Communication (3 Credits) - <em>Completed</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c5" checked disabled>
-        <label for="c5"><strong>FYE 103:</strong> College Career Success (3 Credits) - <em>Completed</em></label>
-    </div>
-
-    <div class="checklist-item">
-        <input type="checkbox" id="c6" onchange="updateProgress()">
-        <label for="c6"><strong>ENG 101:</strong> First-Year Composition I (Fall '25) - <em>In Progress</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c7" onchange="updateProgress()">
-        <label for="c7"><strong>MHL 145:</strong> American Jazz & Popular Music (Fall '25) - <em>In Progress</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c8" onchange="updateProgress()">
-        <label for="c8"><strong>MAT 188:</strong> Precalculus (Full Year) - <em>In Progress</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c9" onchange="updateProgress()">
-        <label for="c9"><strong>ARB 201:</strong> Intermediate Arabic I (Full Year) - <em>In Progress</em></label>
-    </div>
-
-    <div class="checklist-item">
-        <input type="checkbox" id="c10" onchange="updateProgress()">
-        <label for="c10"><strong>ENG 102:</strong> First-Year Composition II (Dual Enrollment) - <em>Register for Spring '26</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c11" checked> 
-        <label for="c11"><strong>BIO 181 + Lab:</strong> General Biology I (Science Major Core) - <em>Registered!</em></label>
-    </div>
-    <div class="checklist-item" style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding-left: 10px;">
-        <input type="checkbox" id="c12" onchange="updateProgress()">
-        <label for="c12"><strong>CHM 151 + Lab:</strong> General Chemistry I - <em><strong>REGISTER NOW (Priority)</strong></em></label>
-    </div>
-
-    <div class="checklist-item">
-        <input type="checkbox" id="c13" onchange="updateProgress()">
-        <label for="c13"><strong>CHM 152 + Lab:</strong> General Chemistry II - <em>Plan for Summer '26</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c14" onchange="updateProgress()">
-        <label for="c14"><strong>PSY 101:</strong> Intro to Psychology (MCAT/SB) - <em>Plan for Summer '26</em></label>
-    </div>
-
-    <div class="checklist-item">
-        <input type="checkbox" id="c15" onchange="updateProgress()">
-        <label for="c15"><strong>CHM 235 + Lab:</strong> Organic Chemistry I (Degree Requirement) - <em>Fall '26</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c16" onchange="updateProgress()">
-        <label for="c16"><strong>MAT 221:</strong> Calculus I (Dual Enrollment) - <em>Fall '26</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c17" onchange="updateProgress()">
-        <label for="c17"><strong>ENH 110:</strong> Intro to Literature (Dual Enrollment) - <em>Fall '26</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c18" onchange="updateProgress()">
-        <label for="c18"><strong>ARB 202:</strong> Intermediate Arabic II (Dual Enrollment) - <em>Fall '26</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c19" onchange="updateProgress()">
-        <label for="c19"><strong>SOC 101:</strong> Intro to Sociology (MCAT/SB) - <em>Fall '26</em></label>
-    </div>
-
-    <div class="checklist-item">
-        <input type="checkbox" id="c20" onchange="updateProgress()">
-        <label for="c20"><strong>CHM 236 + Lab:</strong> Organic Chemistry II - <em>Spring '27</em></label>
-    </div>
-    <div class="checklist-item">
-        <input type="checkbox" id="c21" onchange="updateProgress()">
-        <label for="c21"><strong>BIO 182 + Lab:</strong> General Biology II - <em>Spring '27</em></label>
-    </div>
-</div>
-                    <!-- Undergraduate -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-2 border-b pb-2">Phase 2: Undergraduate</h3>
-                        <div id="checklist-container-ug" class="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4"></div>
-                    </div>
-                    <!-- Medical School -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-2 border-b pb-2">Phase 3: Medical School</h3>
-                        <div id="checklist-container-ms" class="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4"></div>
-                    </div>
-                     <!-- Post-Grad -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-2 border-b pb-2">Phase 4: Post-Graduation</h3>
-                        <div id="checklist-container-pg" class="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 3: University Plans -->
-        <section id="university-plans" class="mb-16">
-            <h2 class="text-3xl font-bold mb-2 text-center">University Plans Comparison</h2>
-            <p class="text-slate-600 text-center max-w-3xl mx-auto mb-8">The undergraduate years are foundational. Here, you can compare detailed plans, pros, and cons for three excellent universities. Click a university name to see its specific pathway and sample curriculum.</p>
-
-            <div class="flex justify-center space-x-2 md:space-x-4 mb-8">
-                <button data-university="ua" class="university-btn active text-sm md:text-base font-semibold py-2 px-4 rounded-full transition-all duration-300 bg-white shadow-sm hover:shadow-md">University of Arizona</button>
-                <button data-university="asu" class="university-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full transition-all duration-300 bg-white shadow-sm hover:shadow-md">Arizona State University</button>
-                <button data-university="harvard" class="university-btn text-sm md:text-base font-semibold py-2 px-4 rounded-full transition-all duration-300 bg-white shadow-sm hover:shadow-md">Harvard University</button>
-            </div>
-
-            <div id="university-content-container">
-                <!-- University content will be injected here by JS -->
-            </div>
-        </section>
-        
-        <!-- Section 4: Med Schools -->
-        <section id="med-schools" class="mb-16">
-            <h2 class="text-3xl font-bold mb-2 text-center">Target Medical Schools</h2>
-            <p class="text-slate-600 text-center max-w-3xl mx-auto mb-8">While many excellent medical schools exist nationwide, here is a closer look at three top-tier options with a presence in Arizona. Understanding their unique strengths and focuses can help tailor your undergraduate experience.</p>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-teal-500">
-                    <h3 class="font-bold text-xl mb-3">University of Arizona (Tucson & Phoenix)</h3>
-                    <p class="font-semibold text-teal-600 mb-2">Key Positives:</p>
-                    <ul class="list-disc list-inside text-slate-600 space-y-1 mb-4">
-                        <li>Strong preference for AZ residents</li>
-                        <li>Excellent clinical training</li>
-                        <li>More affordable in-state tuition</li>
-                    </ul>
-                    <p class="font-semibold text-rose-600 mb-2">Key Challenges:</p>
-                    <ul class="list-disc list-inside text-slate-600 space-y-1">
-                        <li>Large class sizes</li>
-                        <li>Traditional curriculum structure</li>
-                    </ul>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-teal-500">
-                    <h3 class="font-bold text-xl mb-3">Mayo Clinic Alix School of Medicine (AZ)</h3>
-                    <p class="font-semibold text-teal-600 mb-2">Key Positives:</p>
-                    <ul class="list-disc list-inside text-slate-600 space-y-1 mb-4">
-                        <li>World-class reputation</li>
-                        <li>Small class sizes (~50 students)</li>
-                        <li>Significant scholarship opportunities</li>
-                    </ul>
-                    <p class="font-semibold text-rose-600 mb-2">Key Challenges:</p>
-                    <ul class="list-disc list-inside text-slate-600 space-y-1">
-                        <li>Extremely competitive admissions</li>
-                        <li>Requires high stats + unique background</li>
-                    </ul>
-                </div>
-                <div class="bg-white p-6 rounded-xl shadow-md border-t-4 border-teal-500">
-                    <h3 class="font-bold text-xl mb-3">Creighton University (Phoenix)</h3>
-                    <p class="font-semibold text-teal-600 mb-2">Key Positives:</p>
-                    <ul class="list-disc list-inside text-slate-600 space-y-1 mb-4">
-                        <li>Focus on humanistic care and service</li>
-                        <li>Strong clinical training at St. Joseph's</li>
-                        <li>Located directly in Phoenix</li>
-                    </ul>
-                    <p class="font-semibold text-rose-600 mb-2">Key Challenges:</p>
-                    <ul class="list-disc list-inside text-slate-600 space-y-1">
-                        <li>Higher private institution tuition</li>
-                        <li>Less of a research powerhouse</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section 5: Resources -->
-        <section id="resources" class="mb-16">
-            <h2 class="text-3xl font-bold mb-2 text-center">Key Resources & Documentation</h2>
-            <p class="text-slate-600 text-center max-w-3xl mx-auto mb-8">Success on this path involves leveraging available resources and meticulously documenting your experiences. This section provides links for local opportunities and guidance on financial aid and record-keeping.</p>
-            
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="font-bold text-xl mb-4">Phoenix Volunteer & Shadowing</h3>
-                    <div class="space-y-3">
-                        <a href="https://www.bannerhealth.com/ways-to-give/volunteer" target="_blank" class="block font-medium text-teal-600 hover:text-teal-700 transition">Banner Health →</a>
-                        <a href="https://www.honorhealth.com/community/volunteer" target="_blank" class="block font-medium text-teal-600 hover:text-teal-700 transition">HonorHealth →</a>
-                        <a href="https://www.dignityhealth.org/arizona/locations/stjosephs/about-us/volunteer" target="_blank" class="block font-medium text-teal-600 hover:text-teal-700 transition">Dignity Health (St. Joseph's) →</a>
-                        <a href="https://www.phoenixchildrens.org/volunteer" target="_blank" class="block font-medium text-teal-600 hover:text-teal-700 transition">Phoenix Children's Hospital →</a>
-                        <p class="text-slate-600 pt-2">Also consider contacting private clinics directly to inquire about shadowing. This shows great initiative.</p>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="font-bold text-xl mb-4">Financial Aid & Scholarships</h3>
-                    <div class="space-y-3">
-                        <p class="text-slate-600"><strong class="text-slate-800">FAFSA:</strong> Complete the Free Application for Federal Student Aid as soon as it opens (Oct 1). This is key to all federal aid.</p>
-                        <p class="text-slate-600"><strong class="text-slate-800">Merit Scholarships:</strong> UofA/ASU offer scholarships based on GPA/test scores.</p>
-                        <p class="text-slate-600"><strong class="text-slate-800">Arizona Promise Program:</strong> Check eligibility for this program covering tuition for qualifying AZ residents.</p>
-                        <p class="text-slate-600"><strong class="text-slate-800">Search Engines:</strong> Use sites like Fastweb, Scholarships.com, and Going Merry.</p>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded-xl shadow-md md:col-span-2">
-                     <h3 class="font-bold text-xl mb-4">How to Document Everything</h3>
-                     <p class="text-slate-600">This is critical for the medical school application. Start a spreadsheet or document **today** with the following columns for every activity:</p>
-                     <ol class="list-decimal list-inside mt-2 text-slate-600 space-y-1">
-                        <li>Activity/Experience Name</li>
-                        <li>Organization & Location</li>
-                        <li>Supervisor Name & Contact Info</li>
-                        <li>Dates of Involvement & Total Hours</li>
-                        <li>Description of Duties</li>
-                        <li class="font-semibold">Reflection: What did you learn? How did it impact you?</li>
-                     </ol>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer class="bg-slate-800 text-slate-300 py-6">
-        <div class="container mx-auto px-4 text-center">
-            <p>This interactive plan is designed to guide and support Majda on her ambitious and rewarding journey.</p>
         </div>
-    </footer>
 
+        <div id="checklist" class="content-section">
+            <h2>Master Checklist</h2>
+            <p>Use this interactive checklist to track your progress through every critical milestone.</p>
+            
+            <h3>Overall Progress</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar">0%</div>
+            </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Data for Checklist
-    const checklistItems = [
-        { id: 'hs1', text: 'Maintain High GPA (Target 3.8+)', phase: 'hs' },
-        { id: 'hs2', text: 'Complete AP/IB Courses', phase: 'hs' },
-        { id: 'hs3', text: 'Track Dual Enrollment Credits', phase: 'hs', checked: true },
-        { id: 'hs4', text: 'SAT/ACT Prep', phase: 'hs' },
-        { id: 'hs5', text: 'Take Official SAT/ACT', phase: 'hs' },
-        { id: 'hs6', text: 'Secure Clinical Volunteering', phase: 'hs' },
-        { id: 'hs7', text: 'Secure Physician Shadowing', phase: 'hs' },
-        { id: 'hs8', text: 'Finalize College List', phase: 'hs' },
-        { id: 'hs9', text: 'Submit FAFSA & Scholarships', phase: 'hs' },
-        { id: 'ug1', text: 'Meet with Pre-Health Advisor', phase: 'ug' },
-        { id: 'ug2', text: 'Complete ALL Pre-Med Courses', phase: 'ug' },
-        { id: 'ug3', text: 'Maintain High GPA (> 3.7)', phase: 'ug' },
-        { id: 'ug4', text: 'Take the MCAT Exam', phase: 'ug' },
-        { id: 'ug5', text: 'Engage in Scientific Research', phase: 'ug' },
-        { id: 'ug6', text: 'Submit AMCAS Application', phase: 'ug' },
-        { id: 'ug7', text: 'Attend Med School Interviews', phase: 'ug' },
-        { id: 'ms1', text: 'Pass USMLE Step 1 & 2 Exams', phase: 'ms' },
-        { id: 'ms2', text: 'Excel in Anesthesiology Rotation', phase: 'ms' },
-        { id: 'ms3', text: 'Apply for Residency (The Match)', phase: 'ms' },
-        { id: 'pg1', text: 'Complete 4-Year Residency', phase: 'pg' },
-        { id: 'pg2', text: 'Pass Anesthesiology Board Exams', phase: 'pg' },
-    ];
-
-    const checklistContainers = {
-        hs: document.getElementById('checklist-container-hs'),
-        ug: document.getElementById('checklist-container-ug'),
-        ms: document.getElementById('checklist-container-ms'),
-        pg: document.getElementById('checklist-container-pg'),
-    };
-    
-    checklistItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'checklist-item flex items-center';
-        if (item.checked) {
-            div.classList.add('completed');
-        }
-        
-        const input = document.createElement('input');
-        input.type = 'checkbox';
-        input.id = item.id;
-        input.checked = item.checked || false;
-        input.className = 'h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500 cursor-pointer';
-        
-        const label = document.createElement('label');
-        label.htmlFor = item.id;
-        label.textContent = item.text;
-        label.className = 'ml-3 text-sm text-slate-700 cursor-pointer';
-        
-        div.appendChild(input);
-        div.appendChild(label);
-        
-        checklistContainers[item.phase].appendChild(div);
-    });
-
-    const progressBar = document.getElementById('progress-bar');
-    const progressText = document.getElementById('progress-text');
-    const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
-
-    function updateProgress() {
-        const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
-        const totalCount = checkboxes.length;
-        const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount) * 100) : 0;
-        
-        progressBar.style.width = `${percentage}%`;
-        progressText.textContent = `${percentage}%`;
-
-        checkboxes.forEach(cb => {
-            if (cb.checked) {
-                cb.parentElement.classList.add('completed');
-            } else {
-                cb.parentElement.classList.remove('completed');
-            }
-        });
-    }
-
-    checkboxes.forEach(cb => cb.addEventListener('change', updateProgress));
-    updateProgress();
-
-
-    // Chart.js Timeline Chart
-    const ctx = document.getElementById('timelineChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Undergraduate (4 Yrs)', 'Medical School (4 Yrs)', 'Residency (4 Yrs)'],
-            datasets: [{
-                label: 'Years',
-                data: [4, 4, 4],
-                backgroundColor: [
-                    '#5eead4', // teal-300
-                    '#14b8a6', // teal-500
-                    '#0f766e'  // teal-700
-                ],
-                borderColor: '#ffffff',
-                borderWidth: 4
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                           size: 14
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return `${context.label}: ${context.raw} Years`;
-                        }
-                    }
-                }
-            },
-            cutout: '50%'
-        }
-    });
-
-    // University Plan Selector
-    const universityButtons = document.querySelectorAll('.university-btn');
-    const universityContentContainer = document.getElementById('university-content-container');
-
-    const universityData = {
-        ua: {
-            title: "University of Arizona",
-            majors: "Physiology and Medical Sciences; Biochemistry; Molecular & Cellular Biology",
-            contact: "Pre-Health Professions Advising | Website: advising.arizona.edu/pre-health",
-            pros: "Direct link to two state medical schools, strong preference for in-state students, well-established pre-med programs, excellent value.",
-            cons: "Very large introductory classes, can feel less intense than a top-tier private university.",
-            plan: [
-                { year: 1, fall: "CHEM 151 (Gen Chem I) & Lab; BIOL 181 (Gen Bio I) & Lab; MATH 122A/B (Calculus I); First-Year Writing", spring: "CHEM 152 (Gen Chem II) & Lab; MCB 182 (Gen Bio II) & Lab; Statistics; Gen Ed Course", summer: "Clinical Volunteering at Banner - University Medical Center. Explore research labs." },
-                { year: 2, fall: "CHEM 241A (Organic Chem I) & Lab; PHYS 102 (Physics I) & Lab; Physiology Core Course", spring: "CHEM 241B (Organic Chem II) & Lab; PHYS 103 (Physics II) & Lab; Physiology Core Course", summer: "Continue volunteering. Secure a research position in a professor's lab." },
-                { year: 3, fall: "BIOC 385 (Biochemistry); Upper-Level Science Elective; Begin serious MCAT prep", spring: "Upper-Level Science Electives; Humanities/Social Science; Intensive MCAT study", summer: "Take MCAT (May/June). Work on & submit AMCAS application." },
-                { year: 4, fall: "Upper-Level Major Courses; Focus on GPA; Continue all extracurriculars", spring: "Finish graduation requirements; Continue all extracurriculars; Attend medical school interviews", summer: "Graduate! Prepare for medical school." }
-            ]
-        },
-        asu: {
-            title: "Arizona State University",
-            majors: "Biological Sciences (Biomedical Sciences concentration); Biochemistry",
-            contact: "Health Professions Advising | Website: thecollege.asu.edu/health-professions",
-            pros: "Massive research university, strong partnership with Mayo Clinic, innovative culture, great value for in-state tuition.",
-            cons: "Can feel impersonal due to its immense size, requires student to be very proactive to find opportunities and advising.",
-            plan: [
-                { year: 1, fall: "CHM 113 (Gen Chem I); BIO 181 (Gen Bio I); MAT 265 (Calculus I); First-Year Composition", spring: "CHM 116 (Gen Chem II); BIO 182 (Gen Bio II); STP 226 (Statistics); Gen Ed Course", summer: "Clinical Volunteering at Mayo Clinic or local hospital. Look for summer research." },
-                { year: 2, fall: "CHM 233 (Organic Chem I) & Lab; PHY 111 (Physics I) & Lab; Upper-Level Biology", spring: "CHM 234 (Organic Chem II) & Lab; PHY 112 (Physics II) & Lab; Upper-Level Biology", summer: "Continue volunteering. Secure research position (e.g., SOLUR, FURI programs)." },
-                { year: 3, fall: "BCH 361 (Biochemistry); Upper-Level Science Elective; Begin serious MCAT prep", spring: "Upper-Level Science Electives; Humanities/Social Science; Intensive MCAT study", summer: "Take MCAT (May/June). Work on & submit AMCAS application." },
-                { year: 4, fall: "Upper-Level Major Courses; Focus on GPA; Continue all extracurriculars", spring: "Finish graduation requirements; Continue all extracurriculars; Attend medical school interviews", summer: "Graduate! Prepare for medical school." }
-            ]
-        },
-        harvard: {
-            title: "Harvard University",
-            majors: "Human Evolutionary Biology (HEB); Neurobiology; Chemistry and Physical Biology (CPB).",
-            contact: "Mignone Center for Career Success (Pre-Medical Advising) | Website: ocs.fas.harvard.edu/medical-school",
-            pros: "Unmatched global prestige, unparalleled resources and research opportunities, extremely high medical school acceptance rate.",
-            cons: "Extremely competitive admissions, very high-pressure academic environment, high cost of living (though financial aid is excellent).",
-            plan: [
-                { year: 1, fall: "Life Sciences 1a (Chem/Bio); Math (Calculus); Expository Writing; Freshman Seminar", spring: "Physical Sciences 1 (Physics); Life Sciences 1b (Bio/Stats); Gen Ed Course; Elective", summer: "Competitive clinical or research internship (often funded). International service trip." },
-                { year: 2, fall: "Organic Chemistry I & Lab; Physics II & Lab; Major Concentration Course", spring: "Organic Chemistry II & Lab; Major Concentration Course; Humanities Elective", summer: "Continue research at Harvard Medical School or affiliated hospital. Volunteer in Boston." },
-                { year: 3, fall: "Biochemistry; Upper-Level Science Elective; Begin serious MCAT prep", spring: "Upper-Level Science Electives; General Education Course; Intensive MCAT study", summer: "Take MCAT (May/June). Work on & submit AMCAS application." },
-                { year: 4, fall: "Major Thesis (recommended); Advanced Seminars; Continue extracurriculars", spring: "Finish graduation requirements; Continue all extracurriculars; Attend medical school interviews", summer: "Graduate! Prepare for medical school." }
-            ]
-        }
-    };
-
-    function renderUniversityContent(uniKey) {
-        const data = universityData[uniKey];
-        const planRows = data.plan.map(row => `
-            <tr class="border-b border-slate-200">
-                <td class="py-3 px-2 md:px-4 font-semibold text-center">${row.year}</td>
-                <td class="py-3 px-2 md:px-4 text-sm">${row.fall}</td>
-                <td class="py-3 px-2 md:px-4 text-sm">${row.spring}</td>
-                <td class="py-3 px-2 md:px-4 text-sm">${row.summer}</td>
-            </tr>
-        `).join('');
-
-        universityContentContainer.innerHTML = `
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md transition-opacity duration-500">
-                <div class="grid md:grid-cols-2 gap-x-8 gap-y-4 mb-8">
-                    <div><strong class="block text-slate-500">Suggested Majors:</strong> ${data.majors}</div>
-                    <div><strong class="block text-slate-500">Key Contact:</strong> ${data.contact}</div>
-                    <div><strong class="block text-slate-500">Pros:</strong> ${data.pros}</div>
-                    <div><strong class="block text-slate-500">Cons:</strong> ${data.cons}</div>
+            <div class="phase-header" onclick="togglePhase('phase1')">
+                <h3>Phase 1: High School & AS Degree (Now - May 2027)</h3>
+                <span class="toggle-icon">-</span>
+            </div>
+            <div id="phase1" class="phase-content">
+                
+                <h4>Completed Courses (19 Credits)</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c1" checked disabled>
+                    <label for="c1"><strong>ARB 101:</strong> Elementary Arabic I (5 Credits) - <em>Completed</em></label>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100">
-                                <th class="py-3 px-2 md:px-4 font-semibold text-sm text-center">Year</th>
-                                <th class="py-3 px-2 md:px-4 font-semibold text-sm">Fall Semester</th>
-                                <th class="py-3 px-2 md:px-4 font-semibold text-sm">Spring Semester</th>
-                                <th class="py-3 px-2 md:px-4 font-semibold text-sm">Summer</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${planRows}
-                        </tbody>
-                    </table>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c2" checked disabled>
+                    <label for="c2"><strong>ARB 102:</strong> Elementary Arabic II (5 Credits) - <em>Completed</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c3" checked disabled>
+                    <label for="c3"><strong>MAT 152:</strong> College Algebra (3 Credits) - <em>Completed</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c4" checked disabled>
+                    <label for="c4"><strong>COM 110:</strong> Interpersonal Communication (3 Credits) - <em>Completed</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c5" checked disabled>
+                    <label for="c5"><strong>FYE 103:</strong> College Career Success (3 Credits) - <em>Completed</em></label>
+                </div>
+
+                <h4>Current Year (11th Grade)</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c6" onchange="updateProgress()">
+                    <label for="c6"><strong>ENG 101:</strong> First-Year Composition I (Fall '25) - <em>Ends 12/25</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c7" onchange="updateProgress()">
+                    <label for="c7"><strong>MHL 145:</strong> American Jazz & Popular Music (Fall '25) - <em>Ends 11/25</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c8" onchange="updateProgress()">
+                    <label for="c8"><strong>MAT 188:</strong> Precalculus (Full Year) - <em>In Progress</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c9" onchange="updateProgress()">
+                    <label for="c9"><strong>ARB 201:</strong> Intermediate Arabic I (Full Year) - <em>In Progress</em></label>
+                </div>
+
+                <h4>Spring 2026 (Next Semester)</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c10" checked>
+                    <label for="c10"><strong>BIO 181 + Lab:</strong> General Biology I (Major Core) - <em>Registered!</em></label>
+                </div>
+                <div class="checklist-item" style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding-left: 10px;">
+                    <input type="checkbox" id="c11" onchange="updateProgress()">
+                    <label for="c11"><strong>CHM 151 + Lab:</strong> General Chemistry I - <em><strong>REGISTER NOW</strong></em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c12" onchange="updateProgress()">
+                    <label for="c12"><strong>ENG 102:</strong> First-Year Composition II (Dual Enrollment) - <em>Planned</em></label>
+                </div>
+
+                <h4>Summer 2026</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c13" onchange="updateProgress()">
+                    <label for="c13"><strong>CHM 152 + Lab:</strong> General Chemistry II - <em>Plan for Summer</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c14" onchange="updateProgress()">
+                    <label for="c14"><strong>PSY 101:</strong> Intro to Psychology (MCAT/SB) - <em>Plan for Summer</em></label>
+                </div>
+
+                <h4>Fall 2026 (12th Grade)</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c15" onchange="updateProgress()">
+                    <label for="c15"><strong>MAT 221:</strong> Calculus I (Dual Enrollment) - <em>Fall '26</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c16" onchange="updateProgress()">
+                    <label for="c16"><strong>ARB 202:</strong> Intermediate Arabic II (Dual Enrollment) - <em>Fall '26</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c17" onchange="updateProgress()">
+                    <label for="c17"><strong>ENH 110:</strong> Intro to Literature (Dual Enrollment) - <em>Fall '26</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c18" onchange="updateProgress()">
+                    <label for="c18"><strong>CHM 235 + Lab:</strong> Organic Chemistry I - <em>Fall '26 (PM)</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c19" onchange="updateProgress()">
+                    <label for="c19"><strong>SOC 101:</strong> Intro to Sociology - <em>Fall '26 (PM)</em></label>
+                </div>
+
+                <h4>Spring 2027 (Graduation)</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c20" onchange="updateProgress()">
+                    <label for="c20"><strong>CHM 236 + Lab:</strong> Organic Chemistry II - <em>Spring '27</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="c21" onchange="updateProgress()">
+                    <label for="c21"><strong>BIO 182 + Lab:</strong> General Biology II - <em>Spring '27</em></label>
                 </div>
             </div>
-        `;
-    }
 
-    universityButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            universityButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            renderUniversityContent(button.dataset.university);
-        });
-    });
+            <div class="phase-header" onclick="togglePhase('phase2')">
+                <h3>Phase 2: Extracurriculars & Volunteering</h3>
+                <span class="toggle-icon">+</span>
+            </div>
+            <div id="phase2" class="phase-content" style="display: none;">
+                <div class="checklist-item">
+                    <input type="checkbox" id="ec1" onchange="updateProgress()">
+                    <label for="ec1">Join National Honor Society (NHS) - <em>Done</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ec2" onchange="updateProgress()">
+                    <label for="ec2">Join National Society of Leadership & Success - <em>Done</em></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ec3" onchange="updateProgress()">
+                    <label for="ec3">Apply for HonorHealth/Banner Summer Volunteer Program (Feb/March Deadline)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ec4" onchange="updateProgress()">
+                    <label for="ec4">Apply for TGen Helios Scholars Internship (Spring)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ec5" onchange="updateProgress()">
+                    <label for="ec5">Begin Physician Shadowing (Goal: 20 hours)</label>
+                </div>
+            </div>
+        </div>
 
-    renderUniversityContent('ua'); // Initial render
+        <div id="university-plans" class="content-section">
+            <h2>University Plans Comparison</h2>
+            <div class="tabs">
+                <button class="tab-button active" onclick="openTab(event, 'ASU')">Arizona State University</button>
+                <button class="tab-button" onclick="openTab(event, 'UofA')">University of Arizona</button>
+                <button class="tab-button" onclick="openTab(event, 'Harvard')">Harvard (Plan A)</button>
+            </div>
 
-    // Active Nav Link on Scroll
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-link');
+            <div id="ASU" class="tab-content active">
+                <h3>Plan B: ASU + Barrett Honors College</h3>
+                <p><strong>Major:</strong> Biological Sciences (Biomedical Sciences) or Neuroscience</p>
+                <p><strong>Strategy:</strong> Apply as a Transfer Student with AS Degree.</p>
+                <ul>
+                    <li><strong>Transfer:</strong> Seamless transfer of all 79 credits via AGEC-S. Start as Junior.</li>
+                    <li><strong>Barrett Honors:</strong> Apply for "Upper Division" transfer. Gives access to Mayo Clinic research.</li>
+                    <li><strong>Pros:</strong> Close to home, massive scholarship potential, new Medical School opening.</li>
+                </ul>
+            </div>
 
-    window.addEventListener('scroll', () => {
-        let current = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (pageYOffset >= sectionTop - 100) {
-                current = section.getAttribute('id');
+            <div id="UofA" class="tab-content">
+                <h3>Plan C: U of A + Franke Honors College</h3>
+                <p><strong>Major:</strong> Physiology or Medicine (Pre-Health Track)</p>
+                <ul>
+                    <li><strong>HEAP Program:</strong> Honors Early Assurance Program. Apply for early med school acceptance.</li>
+                    <li><strong>Transfer:</strong> Dedicated Maricopa transfer pathway.</li>
+                    <li><strong>Pros:</strong> Established College of Medicine on campus, strong research focus.</li>
+                </ul>
+            </div>
+
+            <div id="Harvard" class="tab-content">
+                <h3>Plan A: Harvard University</h3>
+                <p><strong>Major:</strong> Neuroscience or Molecular Biology</p>
+                <p><strong>Strategy:</strong> Apply as First-Year Applicant (Dual enrollment = Rigor).</p>
+                <ul>
+                    <li><strong>Admissions:</strong> Use your 4.0 GPA + Organic Chem to show you can handle Ivy League work.</li>
+                    <li><strong>Credit:</strong> Likely will NOT transfer science credits. Be prepared to retake them.</li>
+                    <li><strong>Financial:</strong> 100% Need-Based Aid (No merit scholarships).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="med-schools" class="content-section">
+            <h2>Target Medical Schools</h2>
+            <div class="school-grid">
+                <div class="school-card">
+                    <h3>University of Arizona (Phoenix/Tucson)</h3>
+                    <p>Strong in-state preference. Excellent clinical training.</p>
+                </div>
+                <div class="school-card">
+                    <h3>Mayo Clinic Alix School of Medicine</h3>
+                    <p>World-class reputation. Small class sizes. Research heavy.</p>
+                </div>
+                <div class="school-card">
+                    <h3>Creighton University (Phoenix)</h3>
+                    <p>Located at St. Joseph's. Focus on service and clinical skills.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="resources" class="content-section">
+            <h2>Key Resources & Documentation</h2>
+            
+            <h3>Phoenix Volunteer & Shadowing</h3>
+            <a class="resource-link" href="https://www.bannerhealth.com/services/volunteer" target="_blank">Banner Health Volunteer Services →</a>
+            <a class="resource-link" href="https://www.honorhealth.com/community/volunteer-opportunities" target="_blank">HonorHealth Volunteer Opportunities →</a>
+            <a class="resource-link" href="https://www.dignityhealth.org/arizona/locations/stjosephs/ways-to-give/volunteer-information" target="_blank">Dignity Health (St. Joseph's) Volunteer →</a>
+            <a class="resource-link" href="https://phoenixchildrens.org/about-us/ways-help/volunteering" target="_blank">Phoenix Children's Hospital Volunteer →</a>
+
+            <h3>Financial Aid</h3>
+            <p><strong>FAFSA:</strong> Opens in December of Senior Year.</p>
+            <p><strong>Scholarship Universe:</strong> Use this tool once admitted to ASU/NAU/UofA.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // Tab Functionality
+        function openTab(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
             }
-        });
-
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href').includes(current)) {
-                link.classList.add('active');
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
-        });
-    });
-});
-</script>
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
 
+        // Toggle Phases
+        function togglePhase(phaseId) {
+            var phase = document.getElementById(phaseId);
+            var icon = phase.previousElementSibling.querySelector(".toggle-icon");
+            if (phase.style.display === "none") {
+                phase.style.display = "block";
+                icon.textContent = "-";
+            } else {
+                phase.style.display = "none";
+                icon.textContent = "+";
+            }
+        }
+
+        // Progress Bar Logic
+        function updateProgress() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            var checked = document.querySelectorAll('input[type="checkbox"]:checked');
+            var progress = Math.round((checked.length / checkboxes.length) * 100);
+            
+            var progressBar = document.getElementById("progressBar");
+            progressBar.style.width = progress + "%";
+            progressBar.textContent = progress + "%";
+        }
+
+        // Initial Progress Check
+        updateProgress();
+    </script>
 </body>
-
 </html>
