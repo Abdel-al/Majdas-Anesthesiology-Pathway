@@ -144,10 +144,101 @@
 
                 <div class="space-y-4">
                     <!-- High School -->
-                    <div>
-                        <h3 class="font-bold text-xl mb-2 border-b pb-2">Phase 1: High School</h3>
-                        <div id="checklist-container-hs" class="grid sm:grid-cols-2 gap-x-8 gap-y-3 mt-4"></div>
-                    </div>
+                    <div class="phase-header" onclick="togglePhase('phase1')">
+    <h3>Phase 1: High School & AS Degree (Now - May 2027)</h3>
+    <span class="toggle-icon">+</span>
+</div>
+<div id="phase1" class="phase-content">
+    <div class="checklist-item">
+        <input type="checkbox" id="c1" checked disabled>
+        <label for="c1"><strong>ARB 101:</strong> Elementary Arabic I (5 Credits) - <em>Completed</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c2" checked disabled>
+        <label for="c2"><strong>ARB 102:</strong> Elementary Arabic II (5 Credits) - <em>Completed</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c3" checked disabled>
+        <label for="c3"><strong>MAT 152:</strong> College Algebra (3 Credits) - <em>Completed</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c4" checked disabled>
+        <label for="c4"><strong>COM 110:</strong> Interpersonal Communication (3 Credits) - <em>Completed</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c5" checked disabled>
+        <label for="c5"><strong>FYE 103:</strong> College Career Success (3 Credits) - <em>Completed</em></label>
+    </div>
+
+    <div class="checklist-item">
+        <input type="checkbox" id="c6" onchange="updateProgress()">
+        <label for="c6"><strong>ENG 101:</strong> First-Year Composition I (Fall '25) - <em>In Progress</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c7" onchange="updateProgress()">
+        <label for="c7"><strong>MHL 145:</strong> American Jazz & Popular Music (Fall '25) - <em>In Progress</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c8" onchange="updateProgress()">
+        <label for="c8"><strong>MAT 188:</strong> Precalculus (Full Year) - <em>In Progress</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c9" onchange="updateProgress()">
+        <label for="c9"><strong>ARB 201:</strong> Intermediate Arabic I (Full Year) - <em>In Progress</em></label>
+    </div>
+
+    <div class="checklist-item">
+        <input type="checkbox" id="c10" onchange="updateProgress()">
+        <label for="c10"><strong>ENG 102:</strong> First-Year Composition II (Dual Enrollment) - <em>Register for Spring '26</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c11" checked> 
+        <label for="c11"><strong>BIO 181 + Lab:</strong> General Biology I (Science Major Core) - <em>Registered!</em></label>
+    </div>
+    <div class="checklist-item" style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding-left: 10px;">
+        <input type="checkbox" id="c12" onchange="updateProgress()">
+        <label for="c12"><strong>CHM 151 + Lab:</strong> General Chemistry I - <em><strong>REGISTER NOW (Priority)</strong></em></label>
+    </div>
+
+    <div class="checklist-item">
+        <input type="checkbox" id="c13" onchange="updateProgress()">
+        <label for="c13"><strong>CHM 152 + Lab:</strong> General Chemistry II - <em>Plan for Summer '26</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c14" onchange="updateProgress()">
+        <label for="c14"><strong>PSY 101:</strong> Intro to Psychology (MCAT/SB) - <em>Plan for Summer '26</em></label>
+    </div>
+
+    <div class="checklist-item">
+        <input type="checkbox" id="c15" onchange="updateProgress()">
+        <label for="c15"><strong>CHM 235 + Lab:</strong> Organic Chemistry I (Degree Requirement) - <em>Fall '26</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c16" onchange="updateProgress()">
+        <label for="c16"><strong>MAT 221:</strong> Calculus I (Dual Enrollment) - <em>Fall '26</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c17" onchange="updateProgress()">
+        <label for="c17"><strong>ENH 110:</strong> Intro to Literature (Dual Enrollment) - <em>Fall '26</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c18" onchange="updateProgress()">
+        <label for="c18"><strong>ARB 202:</strong> Intermediate Arabic II (Dual Enrollment) - <em>Fall '26</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c19" onchange="updateProgress()">
+        <label for="c19"><strong>SOC 101:</strong> Intro to Sociology (MCAT/SB) - <em>Fall '26</em></label>
+    </div>
+
+    <div class="checklist-item">
+        <input type="checkbox" id="c20" onchange="updateProgress()">
+        <label for="c20"><strong>CHM 236 + Lab:</strong> Organic Chemistry II - <em>Spring '27</em></label>
+    </div>
+    <div class="checklist-item">
+        <input type="checkbox" id="c21" onchange="updateProgress()">
+        <label for="c21"><strong>BIO 182 + Lab:</strong> General Biology II - <em>Spring '27</em></label>
+    </div>
+</div>
                     <!-- Undergraduate -->
                     <div>
                         <h3 class="font-bold text-xl mb-2 border-b pb-2">Phase 2: Undergraduate</h3>
@@ -528,4 +619,5 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 </body>
+
 </html>
