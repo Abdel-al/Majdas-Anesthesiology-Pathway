@@ -206,6 +206,23 @@
         .tab-content { display: none; animation: fadeIn 0.5s; }
         .tab-content.show { display: block; }
         
+        /* Grid for Med Schools */
+        .school-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .school-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-top: 5px solid var(--med-color);
+            transition: transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .school-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .school-card h3 { margin-top: 0; color: var(--dark); }
+
         /* Resource Links */
         .resource-card {
             display: flex;
@@ -215,7 +232,7 @@
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 8px;
-            border-left: 4px solid var(--med-color);
+            border-left: 4px solid var(--res-color);
             text-decoration: none;
             color: inherit;
             transition: transform 0.2s;
@@ -241,7 +258,8 @@
     <ul>
         <li><a href="#timeline">Timeline Chart</a></li>
         <li><a href="#checklist">Course Checklist</a></li>
-        <li><a href="#universities">University Plans</a></li>
+        <li><a href="#universities">Undergrad Plans</a></li>
+        <li><a href="#med-schools">Medical Schools</a></li>
         <li><a href="#resources">Resources</a></li>
     </ul>
 </nav>
@@ -295,151 +313,4 @@
             <div class="checklist-item"><input type="checkbox" checked disabled><label>FYE 103: College Success (3)</label></div>
 
             <h4>🔄 In Progress (Fall 2025)</h4>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENG 101: First-Year Comp I</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>MHL 145: Jazz & Pop Music</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>MAT 188: Precalculus</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ARB 201: Intermediate Arabic I</label></div>
-
-            <h4>📅 Spring 2026 (Urgent)</h4>
-            <div class="checklist-item"><input type="checkbox" checked><label><strong>BIO 181:</strong> Gen Biology I (Registered!)</label></div>
-            <div class="checklist-item priority">
-                <input type="checkbox" class="track" onchange="updateProgress()">
-                <label><strong>CHM 151:</strong> Gen Chemistry I - <em>REGISTER NOW!</em></label>
-            </div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENG 102: First-Year Comp II (Dual Enroll)</label></div>
-
-            <h4>☀️ Summer 2026</h4>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>CHM 152 + Lab: Gen Chemistry II</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>PSY 101: Intro Psychology</label></div>
-
-            <h4>🎓 Fall 2026 & Spring 2027 (12th Grade)</h4>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>MAT 221: Calculus I (Dual Enroll)</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ARB 202: Interm. Arabic II (Dual Enroll)</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENH 110: Intro Literature (Dual Enroll)</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>CHM 235 + Lab: Organic Chemistry I</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>SOC 101: Sociology</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>CHM 236 + Lab: Organic Chemistry II</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>BIO 182 + Lab: Gen Biology II</label></div>
-        </div>
-
-        <div class="phase-header" onclick="togglePhase('phase2', this)">
-            <span>🩺 Phase 2: Pre-Med Extracurriculars</span>
-            <span>▼</span>
-        </div>
-        <div id="phase2" class="phase-content" style="display: none;">
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>Join National Honor Society (Done)</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>Join Nat. Society Leadership & Success (Done)</label></div>
-            <div class="checklist-item priority"><input type="checkbox" class="track" onchange="updateProgress()"><label>Apply for HonorHealth/Banner Summer Program (Feb Deadline)</label></div>
-            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>Secure Physician Shadowing (20 hours)</label></div>
-        </div>
-    </div>
-
-    <div id="universities" class="content-section">
-        <h2>University Plan Comparison</h2>
-        <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('ASU', this)">Plan B: ASU</button>
-            <button class="tab-btn" onclick="showTab('UA', this)">Plan C: U of A</button>
-            <button class="tab-btn" onclick="showTab('HARVARD', this)">Plan A: Harvard</button>
-        </div>
-
-        <div id="ASU" class="tab-content show">
-            <h3>Arizona State University + Barrett Honors</h3>
-            
-
-[Image of Arizona State University campus]
-
-            <p><strong>Transfer Strategy:</strong> Transfer 79 Credits. Junior Status.</p>
-            <ul>
-                <li><strong>Major:</strong> Biological Sciences (Biomedical) OR Neuroscience.</li>
-                <li><strong>Key Benefit:</strong> Mayo Clinic Research Partnership.</li>
-                <li><strong>Action:</strong> Apply for "Upper Division Transfer" to Barrett.</li>
-            </ul>
-        </div>
-
-        <div id="UA" class="tab-content">
-            <h3>University of Arizona + Franke Honors</h3>
-            
-            <p><strong>Transfer Strategy:</strong> AS Degree Transfer Pathway.</p>
-            <ul>
-                <li><strong>Major:</strong> Physiology or Medicine.</li>
-                <li><strong>Key Benefit:</strong> HEAP (Honors Early Assurance Program) for Med School.</li>
-                <li><strong>Action:</strong> Apply to Franke Honors College.</li>
-            </ul>
-        </div>
-
-        <div id="HARVARD" class="tab-content">
-            <h3>Harvard University</h3>
-            
-            <p><strong>Admissions Strategy:</strong> First-Year Applicant.</p>
-            <ul>
-                <li><strong>Role of Dual Enrollment:</strong> Proof of extreme academic rigor.</li>
-                <li><strong>Course Plan:</strong> Retake pre-med sciences at Harvard level.</li>
-                <li><strong>Financial:</strong> 100% Need-Based Aid.</li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="resources" class="content-section">
-        <h2>Volunteering & Applications</h2>
-        <a href="https://www.bannerhealth.com/services/volunteer" target="_blank" class="resource-card">
-            <span><strong>Banner Health</strong><br>Volunteer Services</span>
-            <span>Apply →</span>
-        </a>
-        <a href="https://www.honorhealth.com/community/volunteer-opportunities" target="_blank" class="resource-card">
-            <span><strong>HonorHealth</strong><br>Teen Volunteer Program</span>
-            <span>Apply →</span>
-        </a>
-        <a href="https://phoenixchildrens.org/about-us/ways-help/volunteering" target="_blank" class="resource-card">
-            <span><strong>Phoenix Children's</strong><br>Volunteer Program</span>
-            <span>Apply →</span>
-        </a>
-        <a href="https://www.dignityhealth.org/arizona/locations/stjosephs/ways-to-give/volunteer-information" target="_blank" class="resource-card">
-            <span><strong>St. Joseph's (Dignity)</strong><br>Junior Volunteer</span>
-            <span>Apply →</span>
-        </a>
-    </div>
-
-</div>
-
-<script>
-    // Tab Logic
-    function showTab(tabId, btn) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('show'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        document.getElementById(tabId).classList.add('show');
-        btn.classList.add('active');
-    }
-
-    // Phase Toggle Logic
-    function togglePhase(id, header) {
-        const content = document.getElementById(id);
-        if (content.style.display === "none") {
-            content.style.display = "block";
-            header.querySelector("span:last-child").innerText = "▼";
-        } else {
-            content.style.display = "none";
-            header.querySelector("span:last-child").innerText = "▶";
-        }
-    }
-
-    // Progress Bar Logic
-    function updateProgress() {
-        const total = document.querySelectorAll('.track').length;
-        const checked = document.querySelectorAll('.track:checked').length;
-        const percentage = Math.round((checked / total) * 100);
-        
-        const bar = document.getElementById('progressBar');
-        bar.style.width = percentage + "%";
-        bar.innerText = percentage + "% Complete";
-        
-        if(percentage === 100) {
-            bar.style.background = "#28a745"; // All green when done
-        }
-    }
-    
-    // Run once on load
-    updateProgress();
-</script>
-
-</body>
-</html>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label
