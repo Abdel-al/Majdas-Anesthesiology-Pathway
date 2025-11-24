@@ -4,524 +4,442 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Majda's Anesthesiology Pathway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #8C1D40; /* ASU Maroon */
-            --secondary: #FFC627; /* ASU Gold */
-            --accent: #0C234B; /* UofA Navy */
+            --hs-color: #FFC627; /* High School - Yellow/Gold */
+            --ug-color: #8C1D40; /* Undergrad - Maroon */
+            --med-color: #007bff; /* Med School - Blue */
+            --res-color: #28a745; /* Residency - Green */
+            --dark: #2c3e50;
             --light: #f8f9fa;
-            --dark: #212529;
-            --success: #28a745;
         }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: var(--dark);
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--light);
+            background-color: #f4f6f8;
+            color: var(--dark);
         }
+
+        /* Hero Header */
         header {
-            background-color: var(--primary);
+            background: linear-gradient(135deg, #8C1D40 0%, #5c122a 100%);
             color: white;
-            padding: 2rem;
+            padding: 3rem 1rem;
             text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
+        header h1 { margin: 0; font-size: 2.5rem; }
+        header p { opacity: 0.9; font-size: 1.2rem; }
+
+        /* Navigation */
         nav {
-            background-color: var(--dark);
-            padding: 1rem;
+            background: #212529;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            padding: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         nav ul {
+            display: flex;
+            justify-content: center;
             list-style: none;
             padding: 0;
             margin: 0;
-            display: flex;
-            justify-content: center;
             flex-wrap: wrap;
-        }
-        nav li {
-            margin: 0 15px;
         }
         nav a {
             color: white;
             text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
+            padding: 10px 15px;
+            display: block;
+            font-weight: 600;
         }
-        nav a:hover {
-            color: var(--secondary);
-        }
+        nav a:hover { color: var(--hs-color); }
+
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
+
         .content-section {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
             padding: 2rem;
             margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-        h2 {
-            color: var(--primary);
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 0.5rem;
+
+        h2 { border-bottom: 3px solid #eee; padding-bottom: 10px; color: var(--ug-color); }
+
+        /* --- VISUAL TIMELINE CHART --- */
+        .chart-container {
+            margin: 30px 0;
         }
-        .timeline {
+        .chart-labels {
             display: flex;
             justify-content: space-between;
-            margin: 2rem 0;
-            position: relative;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
         }
-        .timeline::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: #ddd;
-            z-index: 0;
+        .visual-chart {
+            display: flex;
+            height: 60px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
         }
-        .milestone {
-            background: white;
-            border: 2px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        .chart-segment {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            z-index: 1;
-            color: var(--primary);
+            text-align: center;
+            transition: transform 0.2s;
+            position: relative;
         }
+        .chart-segment:hover { transform: scale(1.02); z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        
+        .seg-hs { width: 15%; background-color: var(--hs-color); color: #333; } /* ~2 years */
+        .seg-ug { width: 30%; background-color: var(--ug-color); } /* 4 years */
+        .seg-med { width: 30%; background-color: var(--med-color); } /* 4 years */
+        .seg-res { width: 25%; background-color: var(--res-color); } /* 3-4 years */
+
+        .chart-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 15px;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .legend-item span {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        /* Checklist Styles */
         .phase-header {
-            background-color: #eee;
-            padding: 10px 15px;
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            margin-top: 10px;
-            border-radius: 5px;
+            margin-top: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-weight: 600;
+            border-left: 5px solid #ccc;
+            transition: background 0.2s;
         }
+        .phase-header:hover { background: #e9ecef; }
+        .phase-header.active-phase { border-left-color: var(--ug-color); background: #fff5f8; }
+        
         .phase-content {
-            display: block; /* Changed to default open */
+            display: block;
             padding: 15px;
             border: 1px solid #eee;
             border-top: none;
+            background: #fff;
+            margin-bottom: 10px;
         }
+
         .checklist-item {
-            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f1f1;
             display: flex;
             align-items: flex-start;
         }
-        .checklist-item input {
-            margin-top: 5px;
-            margin-right: 10px;
-            transform: scale(1.2);
+        .checklist-item label { cursor: pointer; margin-left: 10px; }
+        .checklist-item.priority {
+            background-color: #fff8e1;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 3px solid #ffc107;
         }
-        .progress-bar-container {
-            background-color: #e0e0e0;
-            border-radius: 10px;
-            height: 25px;
+
+        /* Progress Bar */
+        .progress-wrapper {
+            background: #e9ecef;
+            border-radius: 20px;
+            height: 30px;
             width: 100%;
             margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
-        .progress-bar {
-            background-color: var(--success);
+        .progress-fill {
+            background: linear-gradient(90deg, #28a745, #20c997);
             height: 100%;
-            border-radius: 10px;
             width: 0%;
-            text-align: center;
-            line-height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
             font-weight: bold;
-            transition: width 0.5s ease-in-out;
+            transition: width 0.8s ease-in-out;
         }
-        .school-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+
+        /* Tabs */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: #eee;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
         }
-        .school-card {
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .tab-btn.active { background: var(--ug-color); color: white; }
+        .tab-content { display: none; animation: fadeIn 0.5s; }
+        .tab-content.show { display: block; }
+        
+        /* Resource Links */
+        .resource-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
             padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--med-color);
+            text-decoration: none;
+            color: inherit;
             transition: transform 0.2s;
         }
-        .school-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ccc;
-        }
-        .tab-button {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-        .tab-button.active {
-            border-bottom: 3px solid var(--primary);
-            color: var(--primary);
-        }
-        .tab-content {
-            display: none;
-            padding: 20px 0;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .resource-link {
-            display: block;
-            padding: 10px;
-            background: #f1f1f1;
-            margin: 5px 0;
-            text-decoration: none;
-            color: var(--dark);
-            border-radius: 4px;
-        }
-        .resource-link:hover {
-            background: #e2e2e2;
-        }
-        .badge {
-            background: var(--secondary);
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
+        .resource-card:hover { transform: translateX(5px); background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         @media (max-width: 768px) {
-            .timeline {
-                flex-direction: column;
-                align-items: center;
-            }
-            .timeline::before {
-                width: 4px;
-                height: 100%;
-                left: 50%;
-                top: 0;
-            }
-            .milestone {
-                margin: 20px 0;
-            }
+            .visual-chart { flex-direction: column; height: auto; }
+            .chart-segment { width: 100% !important; padding: 10px 0; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Majda's Anesthesiology Pathway</h1>
-        <p>An Interactive Guide from High School to Practice</p>
-    </header>
+<header>
+    <h1>Majda's Anesthesiology Pathway</h1>
+    <p>Target Goal: Board Certified Anesthesiologist (Est. 2040)</p>
+</header>
 
-    <nav>
-        <ul>
-            <li><a href="#overview">Overview</a></li>
-            <li><a href="#checklist">Checklist</a></li>
-            <li><a href="#university-plans">University Plans</a></li>
-            <li><a href="#med-schools">Med Schools</a></li>
-            <li><a href="#resources">Resources</a></li>
-        </ul>
-    </nav>
+<nav>
+    <ul>
+        <li><a href="#timeline">Timeline Chart</a></li>
+        <li><a href="#checklist">Course Checklist</a></li>
+        <li><a href="#universities">University Plans</a></li>
+        <li><a href="#resources">Resources</a></li>
+    </ul>
+</nav>
 
-    <div class="container">
+<div class="container">
 
-        <div id="overview" class="content-section">
-            <h2>The Journey Ahead</h2>
-            <p>The path to becoming an anesthesiologist is a marathon, not a sprint. It requires about 12 years of dedicated effort after high school.</p>
-            
-            <div class="timeline">
-                <div style="text-align: center; flex: 1;">
-                    <div class="milestone" style="margin: 0 auto;">1</div>
-                    <h3>High School</h3>
-                    <p>Build a stellar academic profile & get AS Degree.</p>
+    <div id="timeline" class="content-section">
+        <h2 style="text-align: center;">The Road Ahead: 15-Year Timeline</h2>
+        
+        <div class="chart-container">
+            <div class="visual-chart">
+                <div class="chart-segment seg-hs">
+                    <div>HS & AS Degree<br><small>2 Years</small></div>
                 </div>
-                <div style="text-align: center; flex: 1;">
-                    <div class="milestone" style="margin: 0 auto;">2</div>
-                    <h3>Undergraduate</h3>
-                    <p>Bachelor's degree & MCAT exam.</p>
+                <div class="chart-segment seg-ug">
+                    <div>Undergrad<br><small>4 Years</small></div>
                 </div>
-                <div style="text-align: center; flex: 1;">
-                    <div class="milestone" style="margin: 0 auto;">3</div>
-                    <h3>Med School</h3>
-                    <p>Earn M.D. or D.O. degree (4 Years).</p>
+                <div class="chart-segment seg-med">
+                    <div>Med School<br><small>4 Years</small></div>
                 </div>
-                <div style="text-align: center; flex: 1;">
-                    <div class="milestone" style="margin: 0 auto;">4</div>
-                    <h3>Residency</h3>
-                    <p>Anesthesiology Training (4 Years).</p>
+                <div class="chart-segment seg-res">
+                    <div>Residency<br><small>4 Years</small></div>
                 </div>
+            </div>
+
+            <div class="chart-legend">
+                <div class="legend-item"><span style="background: var(--hs-color);"></span>Phase 1: Finish High School (Now - 2027)</div>
+                <div class="legend-item"><span style="background: var(--ug-color);"></span>Phase 2: University (2027 - 2031)</div>
+                <div class="legend-item"><span style="background: var(--med-color);"></span>Phase 3: Med School (2031 - 2035)</div>
+                <div class="legend-item"><span style="background: var(--res-color);"></span>Phase 4: Residency (2035 - 2039)</div>
             </div>
         </div>
-
-        <div id="checklist" class="content-section">
-            <h2>Master Checklist</h2>
-            <p>Use this interactive checklist to track your progress through every critical milestone.</p>
-            
-            <h3>Overall Progress</h3>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progressBar">0%</div>
-            </div>
-
-            <div class="phase-header" onclick="togglePhase('phase1')">
-                <h3>Phase 1: High School & AS Degree (Now - May 2027)</h3>
-                <span class="toggle-icon">-</span>
-            </div>
-            <div id="phase1" class="phase-content">
-                
-                <h4>Completed Courses (19 Credits)</h4>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c1" checked disabled>
-                    <label for="c1"><strong>ARB 101:</strong> Elementary Arabic I (5 Credits) - <em>Completed</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c2" checked disabled>
-                    <label for="c2"><strong>ARB 102:</strong> Elementary Arabic II (5 Credits) - <em>Completed</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c3" checked disabled>
-                    <label for="c3"><strong>MAT 152:</strong> College Algebra (3 Credits) - <em>Completed</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c4" checked disabled>
-                    <label for="c4"><strong>COM 110:</strong> Interpersonal Communication (3 Credits) - <em>Completed</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c5" checked disabled>
-                    <label for="c5"><strong>FYE 103:</strong> College Career Success (3 Credits) - <em>Completed</em></label>
-                </div>
-
-                <h4>Current Year (11th Grade)</h4>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c6" onchange="updateProgress()">
-                    <label for="c6"><strong>ENG 101:</strong> First-Year Composition I (Fall '25) - <em>Ends 12/25</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c7" onchange="updateProgress()">
-                    <label for="c7"><strong>MHL 145:</strong> American Jazz & Popular Music (Fall '25) - <em>Ends 11/25</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c8" onchange="updateProgress()">
-                    <label for="c8"><strong>MAT 188:</strong> Precalculus (Full Year) - <em>In Progress</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c9" onchange="updateProgress()">
-                    <label for="c9"><strong>ARB 201:</strong> Intermediate Arabic I (Full Year) - <em>In Progress</em></label>
-                </div>
-
-                <h4>Spring 2026 (Next Semester)</h4>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c10" checked>
-                    <label for="c10"><strong>BIO 181 + Lab:</strong> General Biology I (Major Core) - <em>Registered!</em></label>
-                </div>
-                <div class="checklist-item" style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding-left: 10px;">
-                    <input type="checkbox" id="c11" onchange="updateProgress()">
-                    <label for="c11"><strong>CHM 151 + Lab:</strong> General Chemistry I - <em><strong>REGISTER NOW</strong></em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c12" onchange="updateProgress()">
-                    <label for="c12"><strong>ENG 102:</strong> First-Year Composition II (Dual Enrollment) - <em>Planned</em></label>
-                </div>
-
-                <h4>Summer 2026</h4>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c13" onchange="updateProgress()">
-                    <label for="c13"><strong>CHM 152 + Lab:</strong> General Chemistry II - <em>Plan for Summer</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c14" onchange="updateProgress()">
-                    <label for="c14"><strong>PSY 101:</strong> Intro to Psychology (MCAT/SB) - <em>Plan for Summer</em></label>
-                </div>
-
-                <h4>Fall 2026 (12th Grade)</h4>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c15" onchange="updateProgress()">
-                    <label for="c15"><strong>MAT 221:</strong> Calculus I (Dual Enrollment) - <em>Fall '26</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c16" onchange="updateProgress()">
-                    <label for="c16"><strong>ARB 202:</strong> Intermediate Arabic II (Dual Enrollment) - <em>Fall '26</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c17" onchange="updateProgress()">
-                    <label for="c17"><strong>ENH 110:</strong> Intro to Literature (Dual Enrollment) - <em>Fall '26</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c18" onchange="updateProgress()">
-                    <label for="c18"><strong>CHM 235 + Lab:</strong> Organic Chemistry I - <em>Fall '26 (PM)</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c19" onchange="updateProgress()">
-                    <label for="c19"><strong>SOC 101:</strong> Intro to Sociology - <em>Fall '26 (PM)</em></label>
-                </div>
-
-                <h4>Spring 2027 (Graduation)</h4>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c20" onchange="updateProgress()">
-                    <label for="c20"><strong>CHM 236 + Lab:</strong> Organic Chemistry II - <em>Spring '27</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="c21" onchange="updateProgress()">
-                    <label for="c21"><strong>BIO 182 + Lab:</strong> General Biology II - <em>Spring '27</em></label>
-                </div>
-            </div>
-
-            <div class="phase-header" onclick="togglePhase('phase2')">
-                <h3>Phase 2: Extracurriculars & Volunteering</h3>
-                <span class="toggle-icon">+</span>
-            </div>
-            <div id="phase2" class="phase-content" style="display: none;">
-                <div class="checklist-item">
-                    <input type="checkbox" id="ec1" onchange="updateProgress()">
-                    <label for="ec1">Join National Honor Society (NHS) - <em>Done</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="ec2" onchange="updateProgress()">
-                    <label for="ec2">Join National Society of Leadership & Success - <em>Done</em></label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="ec3" onchange="updateProgress()">
-                    <label for="ec3">Apply for HonorHealth/Banner Summer Volunteer Program (Feb/March Deadline)</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="ec4" onchange="updateProgress()">
-                    <label for="ec4">Apply for TGen Helios Scholars Internship (Spring)</label>
-                </div>
-                <div class="checklist-item">
-                    <input type="checkbox" id="ec5" onchange="updateProgress()">
-                    <label for="ec5">Begin Physician Shadowing (Goal: 20 hours)</label>
-                </div>
-            </div>
-        </div>
-
-        <div id="university-plans" class="content-section">
-            <h2>University Plans Comparison</h2>
-            <div class="tabs">
-                <button class="tab-button active" onclick="openTab(event, 'ASU')">Arizona State University</button>
-                <button class="tab-button" onclick="openTab(event, 'UofA')">University of Arizona</button>
-                <button class="tab-button" onclick="openTab(event, 'Harvard')">Harvard (Plan A)</button>
-            </div>
-
-            <div id="ASU" class="tab-content active">
-                <h3>Plan B: ASU + Barrett Honors College</h3>
-                <p><strong>Major:</strong> Biological Sciences (Biomedical Sciences) or Neuroscience</p>
-                <p><strong>Strategy:</strong> Apply as a Transfer Student with AS Degree.</p>
-                <ul>
-                    <li><strong>Transfer:</strong> Seamless transfer of all 79 credits via AGEC-S. Start as Junior.</li>
-                    <li><strong>Barrett Honors:</strong> Apply for "Upper Division" transfer. Gives access to Mayo Clinic research.</li>
-                    <li><strong>Pros:</strong> Close to home, massive scholarship potential, new Medical School opening.</li>
-                </ul>
-            </div>
-
-            <div id="UofA" class="tab-content">
-                <h3>Plan C: U of A + Franke Honors College</h3>
-                <p><strong>Major:</strong> Physiology or Medicine (Pre-Health Track)</p>
-                <ul>
-                    <li><strong>HEAP Program:</strong> Honors Early Assurance Program. Apply for early med school acceptance.</li>
-                    <li><strong>Transfer:</strong> Dedicated Maricopa transfer pathway.</li>
-                    <li><strong>Pros:</strong> Established College of Medicine on campus, strong research focus.</li>
-                </ul>
-            </div>
-
-            <div id="Harvard" class="tab-content">
-                <h3>Plan A: Harvard University</h3>
-                <p><strong>Major:</strong> Neuroscience or Molecular Biology</p>
-                <p><strong>Strategy:</strong> Apply as First-Year Applicant (Dual enrollment = Rigor).</p>
-                <ul>
-                    <li><strong>Admissions:</strong> Use your 4.0 GPA + Organic Chem to show you can handle Ivy League work.</li>
-                    <li><strong>Credit:</strong> Likely will NOT transfer science credits. Be prepared to retake them.</li>
-                    <li><strong>Financial:</strong> 100% Need-Based Aid (No merit scholarships).</li>
-                </ul>
-            </div>
-        </div>
-
-        <div id="med-schools" class="content-section">
-            <h2>Target Medical Schools</h2>
-            <div class="school-grid">
-                <div class="school-card">
-                    <h3>University of Arizona (Phoenix/Tucson)</h3>
-                    <p>Strong in-state preference. Excellent clinical training.</p>
-                </div>
-                <div class="school-card">
-                    <h3>Mayo Clinic Alix School of Medicine</h3>
-                    <p>World-class reputation. Small class sizes. Research heavy.</p>
-                </div>
-                <div class="school-card">
-                    <h3>Creighton University (Phoenix)</h3>
-                    <p>Located at St. Joseph's. Focus on service and clinical skills.</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="resources" class="content-section">
-            <h2>Key Resources & Documentation</h2>
-            
-            <h3>Phoenix Volunteer & Shadowing</h3>
-            <a class="resource-link" href="https://www.bannerhealth.com/services/volunteer" target="_blank">Banner Health Volunteer Services →</a>
-            <a class="resource-link" href="https://www.honorhealth.com/community/volunteer-opportunities" target="_blank">HonorHealth Volunteer Opportunities →</a>
-            <a class="resource-link" href="https://www.dignityhealth.org/arizona/locations/stjosephs/ways-to-give/volunteer-information" target="_blank">Dignity Health (St. Joseph's) Volunteer →</a>
-            <a class="resource-link" href="https://phoenixchildrens.org/about-us/ways-help/volunteering" target="_blank">Phoenix Children's Hospital Volunteer →</a>
-
-            <h3>Financial Aid</h3>
-            <p><strong>FAFSA:</strong> Opens in December of Senior Year.</p>
-            <p><strong>Scholarship Universe:</strong> Use this tool once admitted to ASU/NAU/UofA.</p>
-        </div>
-
     </div>
 
-    <script>
-        // Tab Functionality
-        function openTab(evt, cityName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tab-button");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(cityName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
+    <div id="checklist" class="content-section">
+        <h2>Master Progress Checklist</h2>
+        <div class="progress-wrapper">
+            <div class="progress-fill" id="progressBar">0%</div>
+        </div>
 
-        // Toggle Phases
-        function togglePhase(phaseId) {
-            var phase = document.getElementById(phaseId);
-            var icon = phase.previousElementSibling.querySelector(".toggle-icon");
-            if (phase.style.display === "none") {
-                phase.style.display = "block";
-                icon.textContent = "-";
-            } else {
-                phase.style.display = "none";
-                icon.textContent = "+";
-            }
-        }
+        <div class="phase-header active-phase" onclick="togglePhase('phase1', this)">
+            <span>🏫 Phase 1: High School & AS Degree (Current)</span>
+            <span>▼</span>
+        </div>
+        <div id="phase1" class="phase-content">
+            <h4>✅ Completed (19 Credits)</h4>
+            <div class="checklist-item"><input type="checkbox" checked disabled><label>ARB 101: Elementary Arabic I (5)</label></div>
+            <div class="checklist-item"><input type="checkbox" checked disabled><label>ARB 102: Elementary Arabic II (5)</label></div>
+            <div class="checklist-item"><input type="checkbox" checked disabled><label>MAT 152: College Algebra (3)</label></div>
+            <div class="checklist-item"><input type="checkbox" checked disabled><label>COM 110: Interpersonal Comm (3)</label></div>
+            <div class="checklist-item"><input type="checkbox" checked disabled><label>FYE 103: College Success (3)</label></div>
 
-        // Progress Bar Logic
-        function updateProgress() {
-            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            var checked = document.querySelectorAll('input[type="checkbox"]:checked');
-            var progress = Math.round((checked.length / checkboxes.length) * 100);
+            <h4>🔄 In Progress (Fall 2025)</h4>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENG 101: First-Year Comp I</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>MHL 145: Jazz & Pop Music</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>MAT 188: Precalculus</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ARB 201: Intermediate Arabic I</label></div>
+
+            <h4>📅 Spring 2026 (Urgent)</h4>
+            <div class="checklist-item"><input type="checkbox" checked><label><strong>BIO 181:</strong> Gen Biology I (Registered!)</label></div>
+            <div class="checklist-item priority">
+                <input type="checkbox" class="track" onchange="updateProgress()">
+                <label><strong>CHM 151:</strong> Gen Chemistry I - <em>REGISTER NOW!</em></label>
+            </div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENG 102: First-Year Comp II (Dual Enroll)</label></div>
+
+            <h4>☀️ Summer 2026</h4>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>CHM 152 + Lab: Gen Chemistry II</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>PSY 101: Intro Psychology</label></div>
+
+            <h4>🎓 Fall 2026 & Spring 2027 (12th Grade)</h4>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>MAT 221: Calculus I (Dual Enroll)</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ARB 202: Interm. Arabic II (Dual Enroll)</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENH 110: Intro Literature (Dual Enroll)</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>CHM 235 + Lab: Organic Chemistry I</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>SOC 101: Sociology</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>CHM 236 + Lab: Organic Chemistry II</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>BIO 182 + Lab: Gen Biology II</label></div>
+        </div>
+
+        <div class="phase-header" onclick="togglePhase('phase2', this)">
+            <span>🩺 Phase 2: Pre-Med Extracurriculars</span>
+            <span>▼</span>
+        </div>
+        <div id="phase2" class="phase-content" style="display: none;">
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>Join National Honor Society (Done)</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>Join Nat. Society Leadership & Success (Done)</label></div>
+            <div class="checklist-item priority"><input type="checkbox" class="track" onchange="updateProgress()"><label>Apply for HonorHealth/Banner Summer Program (Feb Deadline)</label></div>
+            <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>Secure Physician Shadowing (20 hours)</label></div>
+        </div>
+    </div>
+
+    <div id="universities" class="content-section">
+        <h2>University Plan Comparison</h2>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('ASU', this)">Plan B: ASU</button>
+            <button class="tab-btn" onclick="showTab('UA', this)">Plan C: U of A</button>
+            <button class="tab-btn" onclick="showTab('HARVARD', this)">Plan A: Harvard</button>
+        </div>
+
+        <div id="ASU" class="tab-content show">
+            <h3>Arizona State University + Barrett Honors</h3>
             
-            var progressBar = document.getElementById("progressBar");
-            progressBar.style.width = progress + "%";
-            progressBar.textContent = progress + "%";
-        }
 
-        // Initial Progress Check
-        updateProgress();
-    </script>
+[Image of Arizona State University campus]
+
+            <p><strong>Transfer Strategy:</strong> Transfer 79 Credits. Junior Status.</p>
+            <ul>
+                <li><strong>Major:</strong> Biological Sciences (Biomedical) OR Neuroscience.</li>
+                <li><strong>Key Benefit:</strong> Mayo Clinic Research Partnership.</li>
+                <li><strong>Action:</strong> Apply for "Upper Division Transfer" to Barrett.</li>
+            </ul>
+        </div>
+
+        <div id="UA" class="tab-content">
+            <h3>University of Arizona + Franke Honors</h3>
+            
+            <p><strong>Transfer Strategy:</strong> AS Degree Transfer Pathway.</p>
+            <ul>
+                <li><strong>Major:</strong> Physiology or Medicine.</li>
+                <li><strong>Key Benefit:</strong> HEAP (Honors Early Assurance Program) for Med School.</li>
+                <li><strong>Action:</strong> Apply to Franke Honors College.</li>
+            </ul>
+        </div>
+
+        <div id="HARVARD" class="tab-content">
+            <h3>Harvard University</h3>
+            
+            <p><strong>Admissions Strategy:</strong> First-Year Applicant.</p>
+            <ul>
+                <li><strong>Role of Dual Enrollment:</strong> Proof of extreme academic rigor.</li>
+                <li><strong>Course Plan:</strong> Retake pre-med sciences at Harvard level.</li>
+                <li><strong>Financial:</strong> 100% Need-Based Aid.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="resources" class="content-section">
+        <h2>Volunteering & Applications</h2>
+        <a href="https://www.bannerhealth.com/services/volunteer" target="_blank" class="resource-card">
+            <span><strong>Banner Health</strong><br>Volunteer Services</span>
+            <span>Apply →</span>
+        </a>
+        <a href="https://www.honorhealth.com/community/volunteer-opportunities" target="_blank" class="resource-card">
+            <span><strong>HonorHealth</strong><br>Teen Volunteer Program</span>
+            <span>Apply →</span>
+        </a>
+        <a href="https://phoenixchildrens.org/about-us/ways-help/volunteering" target="_blank" class="resource-card">
+            <span><strong>Phoenix Children's</strong><br>Volunteer Program</span>
+            <span>Apply →</span>
+        </a>
+        <a href="https://www.dignityhealth.org/arizona/locations/stjosephs/ways-to-give/volunteer-information" target="_blank" class="resource-card">
+            <span><strong>St. Joseph's (Dignity)</strong><br>Junior Volunteer</span>
+            <span>Apply →</span>
+        </a>
+    </div>
+
+</div>
+
+<script>
+    // Tab Logic
+    function showTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('show'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('show');
+        btn.classList.add('active');
+    }
+
+    // Phase Toggle Logic
+    function togglePhase(id, header) {
+        const content = document.getElementById(id);
+        if (content.style.display === "none") {
+            content.style.display = "block";
+            header.querySelector("span:last-child").innerText = "▼";
+        } else {
+            content.style.display = "none";
+            header.querySelector("span:last-child").innerText = "▶";
+        }
+    }
+
+    // Progress Bar Logic
+    function updateProgress() {
+        const total = document.querySelectorAll('.track').length;
+        const checked = document.querySelectorAll('.track:checked').length;
+        const percentage = Math.round((checked / total) * 100);
+        
+        const bar = document.getElementById('progressBar');
+        bar.style.width = percentage + "%";
+        bar.innerText = percentage + "% Complete";
+        
+        if(percentage === 100) {
+            bar.style.background = "#28a745"; // All green when done
+        }
+    }
+    
+    // Run once on load
+    updateProgress();
+</script>
+
 </body>
 </html>
