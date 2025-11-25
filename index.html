@@ -4,44 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Majda's Anesthesiology Pathway</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --hs-color: #FFC627; /* High School - Yellow/Gold */
-            --ug-color: #8C1D40; /* Undergrad - Maroon */
-            --med-color: #007bff; /* Med School - Blue */
-            --res-color: #28a745; /* Residency - Green */
+            /* --- PINK THEME PALETTE --- */
+            --hs-color: #FFB6C1; /* Light Pink (High School) */
+            --ug-color: #D81B60; /* Deep Pink/Rose (University - Main Theme) */
+            --med-color: #8E24AA; /* Purple (Med School) */
+            --res-color: #00897B; /* Teal (Residency) */
+            
             --dark: #2c3e50;
-            --light: #f8f9fa;
+            --white: #ffffff;
+            --bg-tint: #fff0f5; /* Lavender Blush */
         }
 
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f6f8;
+            background-color: var(--bg-tint);
             color: var(--dark);
         }
 
         /* Hero Header */
         header {
-            background: linear-gradient(135deg, #8C1D40 0%, #5c122a 100%);
+            background: linear-gradient(135deg, #F06292 0%, #AD1457 100%);
             color: white;
             padding: 3rem 1rem;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(216, 27, 96, 0.3);
         }
-        header h1 { margin: 0; font-size: 2.5rem; }
-        header p { opacity: 0.9; font-size: 1.2rem; }
+        header h1 { margin: 0; font-size: 2.5rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.2); }
+        header p { opacity: 0.95; font-size: 1.2rem; font-weight: 500; }
 
         /* Navigation */
         nav {
-            background: #212529;
+            background: #880E4F; /* Dark Rose */
             position: sticky;
             top: 0;
             z-index: 1000;
             padding: 0.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
         }
         nav ul {
             display: flex;
@@ -57,6 +60,8 @@
             padding: 10px 15px;
             display: block;
             font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
         }
         nav a:hover { color: var(--hs-color); }
 
@@ -67,32 +72,31 @@
         }
 
         .content-section {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 2.5rem;
             margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(216, 27, 96, 0.08);
+            border: 1px solid rgba(216, 27, 96, 0.1);
         }
 
-        h2 { border-bottom: 3px solid #eee; padding-bottom: 10px; color: var(--ug-color); }
+        h2 { 
+            border-bottom: 3px solid #f8bbd0; 
+            padding-bottom: 10px; 
+            color: var(--ug-color); 
+            margin-top: 0;
+        }
 
         /* --- VISUAL TIMELINE CHART --- */
         .chart-container {
             margin: 30px 0;
-        }
-        .chart-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #555;
         }
         .visual-chart {
             display: flex;
             height: 60px;
             border-radius: 30px;
             overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
             color: white;
             font-weight: bold;
             text-transform: uppercase;
@@ -106,12 +110,12 @@
             transition: transform 0.2s;
             position: relative;
         }
-        .chart-segment:hover { transform: scale(1.02); z-index: 2; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        .chart-segment:hover { transform: scale(1.02); z-index: 2; }
         
-        .seg-hs { width: 15%; background-color: var(--hs-color); color: #333; } /* ~2 years */
-        .seg-ug { width: 30%; background-color: var(--ug-color); } /* 4 years */
-        .seg-med { width: 30%; background-color: var(--med-color); } /* 4 years */
-        .seg-res { width: 25%; background-color: var(--res-color); } /* 3-4 years */
+        .seg-hs { width: 15%; background-color: var(--hs-color); color: #880E4F; }
+        .seg-ug { width: 20%; background-color: var(--ug-color); } /* Shortened to 2 years */
+        .seg-med { width: 32.5%; background-color: var(--med-color); }
+        .seg-res { width: 32.5%; background-color: var(--res-color); }
 
         .chart-legend {
             display: flex;
@@ -120,6 +124,7 @@
             margin-top: 15px;
             justify-content: center;
             font-size: 0.9rem;
+            color: #555;
         }
         .legend-item span {
             display: inline-block;
@@ -128,11 +133,21 @@
             border-radius: 50%;
             margin-right: 5px;
         }
+        .acceleration-note {
+            text-align: center;
+            background-color: #fce4ec;
+            color: #880E4F;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            margin-top: 25px;
+            border: 1px solid #f48fb1;
+        }
 
         /* Checklist Styles */
         .phase-header {
-            background: #f8f9fa;
-            padding: 15px 20px;
+            background: #fff;
+            padding: 18px 20px;
             border-radius: 8px;
             cursor: pointer;
             margin-top: 15px;
@@ -140,110 +155,132 @@
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
-            border-left: 5px solid #ccc;
-            transition: background 0.2s;
+            border-left: 5px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s;
         }
-        .phase-header:hover { background: #e9ecef; }
-        .phase-header.active-phase { border-left-color: var(--ug-color); background: #fff5f8; }
+        .phase-header:hover { background: #fff0f5; border-left-color: var(--hs-color); }
+        .phase-header.active-phase { border-left-color: var(--ug-color); background: #fff0f5; }
         
         .phase-content {
             display: block;
-            padding: 15px;
-            border: 1px solid #eee;
-            border-top: none;
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
             background: #fff;
             margin-bottom: 10px;
+            border: 1px solid #f0f0f0;
+            border-top: none;
         }
 
         .checklist-item {
-            padding: 8px 0;
+            padding: 12px 0;
             border-bottom: 1px solid #f1f1f1;
             display: flex;
             align-items: flex-start;
         }
-        .checklist-item label { cursor: pointer; margin-left: 10px; }
+        .checklist-item label { cursor: pointer; margin-left: 10px; color: #555; }
+        .checklist-item input:checked + label { color: var(--ug-color); font-weight: 600; }
+        
         .checklist-item.priority {
             background-color: #fff8e1;
-            padding: 10px;
-            border-radius: 5px;
-            border-left: 3px solid #ffc107;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #ffca28;
+            margin: 5px 0;
         }
 
         /* Progress Bar */
         .progress-wrapper {
-            background: #e9ecef;
+            background: #eeeeee;
             border-radius: 20px;
-            height: 30px;
+            height: 28px;
             width: 100%;
             margin: 20px 0;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
         .progress-fill {
-            background: linear-gradient(90deg, #28a745, #20c997);
+            background: linear-gradient(90deg, var(--hs-color), var(--ug-color));
             height: 100%;
             width: 0%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            font-size: 0.85rem;
             font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
             transition: width 0.8s ease-in-out;
         }
 
         /* Tabs */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .tab-btn {
-            padding: 10px 20px;
-            border: none;
-            background: #eee;
-            border-radius: 20px;
+            padding: 12px 30px;
+            border: 2px solid var(--ug-color);
+            background: white;
+            color: var(--ug-color);
+            border-radius: 30px;
             cursor: pointer;
             font-weight: 600;
-            transition: 0.3s;
+            transition: all 0.3s;
+            font-family: inherit;
         }
-        .tab-btn.active { background: var(--ug-color); color: white; }
+        .tab-btn:hover { background: #fce4ec; transform: translateY(-2px); }
+        .tab-btn.active { 
+            background: var(--ug-color); 
+            color: white; 
+            box-shadow: 0 5px 15px rgba(216, 27, 96, 0.4); 
+        }
+        
         .tab-content { display: none; animation: fadeIn 0.5s; }
         .tab-content.show { display: block; }
+        .tab-content h3 { color: var(--ug-color); margin-top: 0; }
         
         /* Grid for Med Schools */
         .school-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 25px;
         }
         .school-card {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            border-top: 5px solid var(--med-color);
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            border-top: 6px solid var(--med-color);
             transition: transform 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border: 1px solid #f0f0f0;
         }
-        .school-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .school-card h3 { margin-top: 0; color: var(--dark); }
+        .school-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .school-card h3 { margin-top: 0; color: var(--med-color); }
 
         /* Resource Links */
         .resource-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 4px solid var(--res-color);
+            background: #ffffff;
+            padding: 18px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            border-left: 5px solid var(--res-color);
             text-decoration: none;
             color: inherit;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transition: transform 0.2s;
         }
-        .resource-card:hover { transform: translateX(5px); background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .resource-card:hover { 
+            transform: translateX(5px); 
+            background: #e0f2f1; 
+            box-shadow: 0 5px 15px rgba(0,150,136,0.15); 
+        }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         @media (max-width: 768px) {
-            .visual-chart { flex-direction: column; height: auto; }
-            .chart-segment { width: 100% !important; padding: 10px 0; }
+            .visual-chart { flex-direction: column; height: auto; border-radius: 12px; }
+            .chart-segment { width: 100% !important; padding: 15px 0; }
+            .tabs { justify-content: center; }
         }
     </style>
 </head>
@@ -251,7 +288,7 @@
 
 <header>
     <h1>Majda's Anesthesiology Pathway</h1>
-    <p>Target Goal: Board Certified Anesthesiologist (Est. 2040)</p>
+    <p>Target Goal: Board Certified Anesthesiologist (Est. 2038)</p>
 </header>
 
 <nav>
@@ -267,15 +304,15 @@
 <div class="container">
 
     <div id="timeline" class="content-section">
-        <h2 style="text-align: center;">The Road Ahead: 15-Year Timeline</h2>
+        <h2 style="text-align: center;">The Accelerated Road Ahead</h2>
         
         <div class="chart-container">
             <div class="visual-chart">
                 <div class="chart-segment seg-hs">
-                    <div>HS & AS Degree<br><small>2 Years</small></div>
+                    <div>HS & AS<br><small>2 Years</small></div>
                 </div>
                 <div class="chart-segment seg-ug">
-                    <div>Undergrad<br><small>4 Years</small></div>
+                    <div>University<br><small>2 Years*</small></div>
                 </div>
                 <div class="chart-segment seg-med">
                     <div>Med School<br><small>4 Years</small></div>
@@ -286,10 +323,14 @@
             </div>
 
             <div class="chart-legend">
-                <div class="legend-item"><span style="background: var(--hs-color);"></span>Phase 1: Finish High School (Now - 2027)</div>
-                <div class="legend-item"><span style="background: var(--ug-color);"></span>Phase 2: University (2027 - 2031)</div>
-                <div class="legend-item"><span style="background: var(--med-color);"></span>Phase 3: Med School (2031 - 2035)</div>
-                <div class="legend-item"><span style="background: var(--res-color);"></span>Phase 4: Residency (2035 - 2039)</div>
+                <div class="legend-item"><span style="background: var(--hs-color);"></span>Phase 1: HS/AS (Now-2027)</div>
+                <div class="legend-item"><span style="background: var(--ug-color);"></span>Phase 2: Univ (2027-2029)</div>
+                <div class="legend-item"><span style="background: var(--med-color);"></span>Phase 3: Med (2029-2033)</div>
+                <div class="legend-item"><span style="background: var(--res-color);"></span>Phase 4: Res (2033-2037)</div>
+            </div>
+
+            <div class="acceleration-note">
+                <strong>⚡ Acceleration Alert:</strong> Your 79 credits and AS Degree will allow you to enter Arizona universities as a <strong>Junior</strong>, saving 2 full years! <br><em>(Note: Harvard path remains 4 years).</em>
             </div>
         </div>
     </div>
@@ -321,8 +362,7 @@
             <h4>📅 Spring 2026 (Urgent)</h4>
             <div class="checklist-item"><input type="checkbox" checked><label><strong>BIO 181:</strong> Gen Biology I (Registered!)</label></div>
             <div class="checklist-item priority">
-                <input type="checkbox" class="track" onchange="updateProgress()">
-                <label><strong>CHM 151:</strong> Gen Chemistry I - <em>REGISTER NOW!</em></label>
+                <input type="checkbox" class="track" onchange="updateProgress()"><label><strong>CHM 151:</strong> Gen Chemistry I - <em>REGISTER NOW!</em></label>
             </div>
             <div class="checklist-item"><input type="checkbox" class="track" onchange="updateProgress()"><label>ENG 102: First-Year Comp II (Dual Enroll)</label></div>
 
@@ -355,18 +395,24 @@
     <div id="universities" class="content-section">
         <h2>Undergraduate University Plans</h2>
         <div class="tabs">
-            <button class="tab-btn active" onclick="showTab('ASU', this)">Plan B: ASU</button>
+            <button class="tab-btn active" onclick="showTab('HARVARD', this)">Plan A: Harvard</button>
+            <button class="tab-btn" onclick="showTab('ASU', this)">Plan B: ASU</button>
             <button class="tab-btn" onclick="showTab('UA', this)">Plan C: U of A</button>
-            <button class="tab-btn" onclick="showTab('HARVARD', this)">Plan A: Harvard</button>
         </div>
 
-        <div id="ASU" class="tab-content show">
+        <div id="HARVARD" class="tab-content show">
+            <h3>Harvard University</h3>
+            <p><strong>Admissions Strategy:</strong> First-Year Applicant.</p>
+            <ul>
+                <li><strong>Role of Dual Enrollment:</strong> Proof of extreme academic rigor.</li>
+                <li><strong>Course Plan:</strong> Retake pre-med sciences at Harvard level (4 Years).</li>
+                <li><strong>Financial:</strong> 100% Need-Based Aid.</li>
+            </ul>
+        </div>
+
+        <div id="ASU" class="tab-content">
             <h3>Arizona State University + Barrett Honors</h3>
-            
-
-[Image of Arizona State University campus]
-
-            <p><strong>Transfer Strategy:</strong> Transfer 79 Credits. Junior Status.</p>
+            <p><strong>Transfer Strategy:</strong> Transfer 79 Credits. Junior Status (2 Years).</p>
             <ul>
                 <li><strong>Major:</strong> Biological Sciences (Biomedical) OR Neuroscience.</li>
                 <li><strong>Key Benefit:</strong> Mayo Clinic Research Partnership.</li>
@@ -376,23 +422,11 @@
 
         <div id="UA" class="tab-content">
             <h3>University of Arizona + Franke Honors</h3>
-            
-            <p><strong>Transfer Strategy:</strong> AS Degree Transfer Pathway.</p>
+            <p><strong>Transfer Strategy:</strong> AS Degree Transfer Pathway (2 Years).</p>
             <ul>
                 <li><strong>Major:</strong> Physiology or Medicine.</li>
                 <li><strong>Key Benefit:</strong> HEAP (Honors Early Assurance Program) for Med School.</li>
                 <li><strong>Action:</strong> Apply to Franke Honors College.</li>
-            </ul>
-        </div>
-
-        <div id="HARVARD" class="tab-content">
-            <h3>Harvard University</h3>
-            
-            <p><strong>Admissions Strategy:</strong> First-Year Applicant.</p>
-            <ul>
-                <li><strong>Role of Dual Enrollment:</strong> Proof of extreme academic rigor.</li>
-                <li><strong>Course Plan:</strong> Retake pre-med sciences at Harvard level.</li>
-                <li><strong>Financial:</strong> 100% Need-Based Aid.</li>
             </ul>
         </div>
     </div>
@@ -472,7 +506,7 @@
         bar.innerText = percentage + "% Complete";
         
         if(percentage === 100) {
-            bar.style.background = "#28a745"; // All green when done
+            bar.style.background = "#00897B"; // Teal (Residency color) when done
         }
     }
     
